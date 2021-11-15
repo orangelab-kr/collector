@@ -1,25 +1,20 @@
 import React from 'react';
+import 'react-app-polyfill/ie9';
+import 'react-app-polyfill/stable';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import { Reset } from 'styled-reset';
-import {
-  AuthAuthorize,
-  Notification,
-  RequiredAuth,
-  Secession,
-  Setting,
-  Sidebar,
-} from '.';
+import { AuthLogout, AuthPrelogin, Kickboards, RequiredAuth } from '.';
 
 export * from './components';
 export * from './pages';
 export * from './tools';
 
 export const baseURL =
-  window.location.host === 'weblink.hikick.kr'
-    ? 'https://coreservice.hikick.kr/v1'
-    : 'https://coreservice.staging.hikick.kr/v1';
+  window.location.host === 'collector.hikick.kr'
+    ? 'https://openapi.hikick.kr/v1/collector'
+    : 'https://openapi.staging.hikick.kr/v1/collector';
 
 const GlobalStyle = styled.div`
   * {
@@ -35,25 +30,17 @@ ReactDOM.render(
     <GlobalStyle>
       <BrowserRouter>
         <Switch>
-          <Route path="/auth/authorize">
-            <AuthAuthorize />
+          <Route path="/auth/prelogin">
+            <AuthPrelogin />
           </Route>
-          <Route path="/">
-            <RequiredAuth>
-              <Route path="/setting">
-                <Setting />
-              </Route>
-              <Route path="/notification">
-                <Notification />
-              </Route>
-              <Route path="/sidebar">
-                <Sidebar />
-              </Route>
-              <Route path="/secession">
-                <Secession />
-              </Route>
-            </RequiredAuth>
-          </Route>
+          <RequiredAuth>
+            <Route path="/">
+              <Kickboards />
+            </Route>
+            <Route path="/auth/logout">
+              <AuthLogout />
+            </Route>
+          </RequiredAuth>
         </Switch>
       </BrowserRouter>
     </GlobalStyle>

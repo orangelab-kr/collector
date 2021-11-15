@@ -1,8 +1,8 @@
-name: Staging deploy!
+name: Production deploy!
 on:
   push:
     branches:
-      - stage
+      - prod
 
 jobs:
   deploy:
@@ -34,13 +34,13 @@ jobs:
           aws s3 cp \
             --recursive \
             --region ap-northeast-2 \
-            build s3://weblink.staging.hikick.kr
+            build s3://collector.hikick.kr
 
       - name: Delete Cloudfront Cache
         uses: chetan/invalidate-cloudfront-action@v2
         env:
           PATHS: '/index.html'
-          DISTRIBUTION: ${{ secrets.PROD_DISTRIBUTION_ID }}
+          DISTRIBUTION: ${{ secrets.STAGE_DISTRIBUTION_ID }}
           AWS_REGION: 'ap-northeast-2'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
