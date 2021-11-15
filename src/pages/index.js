@@ -1,3 +1,3 @@
 export * from './auth';
 export * from './Kickboards';
-export * from './auth';
+export * from './Qrcode';

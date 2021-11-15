@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import { Reset } from 'styled-reset';
 import { QueryParamProvider } from 'use-query-params';
-import { AuthLogout, AuthPrelogin, Kickboards, RequiredAuth } from '.';
+import { AuthLogout, AuthLogin, Kickboards, Qrcode, RequiredAuth } from '.';
 
 export * from './components';
 export * from './pages';
@@ -15,7 +15,8 @@ export * from './tools';
 export const baseURL =
   window.location.host === 'collector.hikick.kr'
     ? 'https://openapi.hikick.kr/v1/collector'
-    : 'https://openapi.staging.hikick.kr/v1/collector';
+    : // : 'https://openapi.staging.hikick.kr/v1/collector';
+      'https://backend.dan.al/v1/collector';
 
 const GlobalStyle = styled.div`
   * {
@@ -32,12 +33,15 @@ ReactDOM.render(
       <BrowserRouter>
         <QueryParamProvider ReactRouterRoute={Route}>
           <Switch>
-            <Route path="/auth/prelogin">
-              <AuthPrelogin />
+            <Route path="/auth/login">
+              <AuthLogin />
             </Route>
             <RequiredAuth>
-              <Route path="/">
+              <Route path="/" exact>
                 <Kickboards />
+              </Route>
+              <Route path="/qrcode">
+                <Qrcode />
               </Route>
               <Route path="/auth/logout">
                 <AuthLogout />

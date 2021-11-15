@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { NaverMap, RenderAfterNavermapsLoaded } from 'react-naver-maps';
 import 'react-spring-bottom-sheet/dist/style.css';
@@ -11,11 +12,13 @@ import {
   Sidebar,
   SidebarOpener,
   useDebounce,
+  useLocalStorage,
 } from '..';
 
 export const Kickboards = () => {
   const radius = 3000;
   const defaultLoc = { lat: 37.50526, lng: 127.054806 };
+  const defaultSetting = { priority: [0, 1, 2, 3] };
 
   const [zoom, setZoom] = useState(16);
   const [mode, setMode] = useState('static');
@@ -27,6 +30,10 @@ export const Kickboards = () => {
   const [currentLoc, setCurrentLoc] = useState(defaultLoc);
   const [positionLoc, setPositionLoc] = useState(defaultLoc);
   const debouncedPositionLoc = useDebounce(positionLoc, 500);
+  const [setting, setSetting] = useLocalStorage(
+    'collector-setting',
+    defaultSetting
+  );
 
   const onClick = () => setKickboard(null);
   const onCenterChanged = ({ _lat, _lng }) => {
@@ -71,10 +78,11 @@ export const Kickboards = () => {
     }).then((res) => mergeKickboards(res.data.kickboards));
   }, [debouncedPositionLoc, mergeKickboards]);
 
-  const getRegions = useCallback(
-    () => Client.get('/regions').then((res) => setRegions(res.data.regions)),
-    []
-  );
+  const getRegions = useCallback(async () => {
+    const priority = _.get(setting, 'priority');
+    const { data } = await Client.get('/regions', { params: { priority } });
+    setRegions(data.regions);
+  }, [setting]);
 
   const getCenter = () => {
     switch (mode) {
@@ -113,6 +121,8 @@ export const Kickboards = () => {
         setMode={setMode}
         selectKickboardByCode={selectKickboardByCode}
         getKickboards={getKickboards}
+        setting={setting}
+        setSetting={setSetting}
       />
       <RenderAfterNavermapsLoaded ncpClientId="0bl6xi2j7x">
         <NaverMap
