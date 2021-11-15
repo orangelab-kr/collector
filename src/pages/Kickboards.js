@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { NaverMap, RenderAfterNavermapsLoaded } from 'react-naver-maps';
 import 'react-spring-bottom-sheet/dist/style.css';
+import { StringParam, useQueryParam } from 'use-query-params';
 import {
   Client,
   MapBottom,
@@ -13,24 +14,20 @@ import {
 } from '..';
 
 export const Kickboards = () => {
+  const radius = 3000;
+  const defaultLoc = { lat: 37.50526, lng: 127.054806 };
+
   const [zoom, setZoom] = useState(16);
   const [mode, setMode] = useState('static');
   const [kickboard, setKickboard] = useState();
   const [kickboards, setKickboards] = useState([]);
   const [regions, setRegions] = useState([]);
   const [sidebar, setSidebar] = useState(false);
-  const [positionLoc, setPositionLoc] = useState({
-    lat: 37.50526,
-    lng: 127.054806,
-  });
-
+  const [kickboardCode] = useQueryParam('kickboardCode', StringParam);
+  const [currentLoc, setCurrentLoc] = useState(defaultLoc);
+  const [positionLoc, setPositionLoc] = useState(defaultLoc);
   const debouncedPositionLoc = useDebounce(positionLoc, 500);
-  const [currentLoc, setCurrentLoc] = useState({
-    lat: 37.50526,
-    lng: 127.054806,
-  });
 
-  const radius = 3000;
   const onClick = () => setKickboard(null);
   const onCenterChanged = ({ _lat, _lng }) => {
     setPositionLoc({ lat: _lat, lng: _lng });
@@ -89,14 +86,22 @@ export const Kickboards = () => {
     }
   };
 
-  const selectKickboardByCode = async (kickboardCode) => {
-    const { data } = await Client.get(`/kickboards/${kickboardCode}`);
-    mergeKickboards([data.kickboard]);
-    onSelectedKickboard(data.kickboard);
-  };
+  const selectKickboardByCode = useCallback(
+    async (kickboardCode) => {
+      if (!kickboardCode) return;
+      const { data } = await Client.get(`/kickboards/${kickboardCode}`);
+      mergeKickboards([data.kickboard]);
+      onSelectedKickboard(data.kickboard);
+    },
+    [mergeKickboards]
+  );
 
   useEffect(() => getKickboards(), [getKickboards]);
   useEffect(() => getRegions(), [getRegions]);
+  useEffect(
+    () => selectKickboardByCode(kickboardCode),
+    [kickboardCode, selectKickboardByCode]
+  );
 
   return (
     <>

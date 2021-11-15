@@ -17,7 +17,8 @@
     "react-scripts": "4.0.3",
     "react-spring-bottom-sheet": "^3.4.0",
     "styled-components": "^5.3.3",
-    "styled-reset": "^4.3.4"
+    "styled-reset": "^4.3.4",
+    "use-query-params": "^1.2.3"
   },
   "scripts": {
     "start": "react-scripts start",

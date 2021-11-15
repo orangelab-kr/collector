@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import { Reset } from 'styled-reset';
+import { QueryParamProvider } from 'use-query-params';
 import { AuthLogout, AuthPrelogin, Kickboards, RequiredAuth } from '.';
 
 export * from './components';
@@ -29,19 +30,21 @@ ReactDOM.render(
     <Reset />
     <GlobalStyle>
       <BrowserRouter>
-        <Switch>
-          <Route path="/auth/prelogin">
-            <AuthPrelogin />
-          </Route>
-          <RequiredAuth>
-            <Route path="/">
-              <Kickboards />
+        <QueryParamProvider ReactRouterRoute={Route}>
+          <Switch>
+            <Route path="/auth/prelogin">
+              <AuthPrelogin />
             </Route>
-            <Route path="/auth/logout">
-              <AuthLogout />
-            </Route>
-          </RequiredAuth>
-        </Switch>
+            <RequiredAuth>
+              <Route path="/">
+                <Kickboards />
+              </Route>
+              <Route path="/auth/logout">
+                <AuthLogout />
+              </Route>
+            </RequiredAuth>
+          </Switch>
+        </QueryParamProvider>
       </BrowserRouter>
     </GlobalStyle>
   </React.StrictMode>,
