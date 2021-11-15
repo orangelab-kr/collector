@@ -1,4 +1,3 @@
-import { Image } from 'antd-mobile';
 import styled from 'styled-components';
 
 const NameContainer = styled.p`
@@ -8,16 +7,5 @@ const NameContainer = styled.p`
 `;
 
 export const SidebarProfile = ({ user }) => {
-  return (
-    <>
-      <Image
-        fit="cover"
-        src={user.profileUrl || '/assets/user.png'}
-        style={{ borderRadius: 100 }}
-        height={50}
-        width={50}
-      />
-      <NameContainer>{user.realname}</NameContainer>
-    </>
-  );
+  return <NameContainer>{user.realname}</NameContainer>;
 };
