@@ -9,7 +9,7 @@ export const RequiredAuth = withRouter(({ children, history }) => {
       await Client.get('/auth');
       setLoading(false);
     } catch (err) {
-      history.push('/auth/prelogin');
+      history.push('/auth/login');
     }
   }, [history]);
 
