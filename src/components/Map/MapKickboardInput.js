@@ -49,7 +49,7 @@ export const MapKickboardInput = ({ selectKickboardByCode }) => {
       style={{
         position: 'absolute',
         top: -60,
-        right: 60,
+        left: 5,
         borderRadius: 100,
         padding: '12px 15px',
       }}

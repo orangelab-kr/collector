@@ -1,6 +1,11 @@
 import { BottomSheet } from 'react-spring-bottom-sheet';
 import styled from 'styled-components';
-import { MapBottomSelected, MapKickboardInput, MapLocationButton } from '.';
+import {
+  MapBottomSelected,
+  MapKickboardInput,
+  MapLocationButton,
+  MapSetting,
+} from '.';
 
 const Header = styled.div`
   margin: 15px 0 10px 10px;
@@ -18,6 +23,8 @@ export const MapBottom = ({
   setMode,
   selectKickboardByCode,
   getKickboards,
+  setting,
+  setSetting,
 }) => {
   const onSnapPoints = ({ maxHeight }) => {
     const points = [70];
@@ -40,6 +47,7 @@ export const MapBottom = ({
       snapPoints={onSnapPoints}
       header={
         <Header>
+          <MapSetting setting={setting} setSetting={setSetting} />
           <MapKickboardInput selectKickboardByCode={selectKickboardByCode} />
           <MapLocationButton mode={mode} onModeChange={setMode} />
           <Title>
