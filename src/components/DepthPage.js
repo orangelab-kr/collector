@@ -2,13 +2,7 @@ import { LeftOutline } from 'antd-mobile-icons';
 import { withRouter } from 'react-router';
 
 export const DepthPage = withRouter(({ children, history }) => {
-  const onClick = () => {
-    setTimeout(() => {
-      window.location.href = 'hikick://weblink/close';
-    }, 100);
-
-    history.goBack();
-  };
+  const onClick = () => history.goBack();
 
   return (
     <>
