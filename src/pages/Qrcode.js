@@ -30,6 +30,7 @@ export const Qrcode = () => {
 
   const onScan = async (value) => {
     if (isProcessing || !value) return;
+    window.navigator.vibrate(100);
     setIsProcessing(true);
     const kickboardCode = await getKickboardCode(value);
     if (mode === 'battery') {
@@ -64,6 +65,7 @@ export const Qrcode = () => {
 
   const onClick = async () => {
     if (mode !== 'battery' || isProcessing || !kickboardCode) return;
+    window.navigator.vibrate(100);
     setIsProcessing(true);
     await actionKickboard(kickboardCode, '/battery/lock');
     setIsProcessing(false);
