@@ -15,11 +15,10 @@ export * from './tools';
 export const baseURL =
   window.location.host === 'collector.hikick.kr'
     ? 'https://openapi.hikick.kr/v1/collector'
-    : 'https://backend.dan.al/v1/collector';
+    : 'https://openapi.staging.hikick.kr/v1/collector';
 
 const GlobalStyle = styled.div`
   * {
-    user-select: none;
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     -webkit-touch-callout: none;
   }

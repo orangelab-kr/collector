@@ -100,6 +100,7 @@ export const AuthLogin = withRouter(({ history }) => {
             <Form form={form} onFinish={loginWithPhone}>
               <Form.Item name="phoneNo" extra={SendVerify}>
                 <Input
+                  type="tel"
                   placeholder="전화번호"
                   onChange={onPhoneNoChange}
                   clearable
