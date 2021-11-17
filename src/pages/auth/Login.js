@@ -1,5 +1,5 @@
-import { Button, Input, Tabs, Toast } from 'antd-mobile';
-import { List } from 'antd-mobile/es/components/list/list';
+import { Button, Form, Input, Tabs, Toast } from 'antd-mobile';
+import { MessageOutline, RedoOutline } from 'antd-mobile-icons';
 import { useEffect, useState } from 'react';
 import QrReader from 'react-qr-reader';
 import { withRouter } from 'react-router';
@@ -14,6 +14,8 @@ const MessageContainer = styled.div`
 `;
 
 export const AuthLogin = withRouter(({ history }) => {
+  const [form] = Form.useForm();
+  const [requested, setRequested] = useState(false);
   const [preloginId, setPreloginId] = useState(useQuery().preloginId);
   const onError = () => {
     Toast.show({
@@ -23,11 +25,28 @@ export const AuthLogin = withRouter(({ history }) => {
   };
 
   const onScan = (value) => {
-    const startsWith = `${window.location.origin}/auth/prelogin?preloginId=`;
+    const startsWith = `${window.location.origin}/auth/login?preloginId=`;
     if (!value || !value.startsWith(startsWith)) return;
     const newPreloginId = value.replace(startsWith, '');
     if (newPreloginId === preloginId) return;
     setPreloginId(newPreloginId);
+  };
+
+  const sendVerify = async () => {
+    setRequested(true);
+    const phoneNo = form.getFieldValue('phoneNo');
+    await Client.get('/auth/phone', { params: { phoneNo } });
+    Toast.show('문자를 발송하였습니다.');
+  };
+
+  const onVerifyPhone = async () => {
+    const phoneNo = form.getFieldValue('phoneNo');
+    const code = form.getFieldValue('code');
+    if (!phoneNo || code.length !== 6) return;
+    const { data } = await Client.post('/auth/phone', { phoneNo, code });
+
+    const { phoneId } = data;
+    form.setFieldsValue({ phoneId });
   };
 
   useEffect(() => {
@@ -38,6 +57,28 @@ export const AuthLogin = withRouter(({ history }) => {
       history.push('/');
     });
   }, [history, preloginId]);
+
+  const SendVerify = (
+    <Button size="mini" color="primary" onClick={sendVerify}>
+      {requested ? <RedoOutline /> : <MessageOutline />}{' '}
+      {requested ? '재전송' : '문자 발송'}
+    </Button>
+  );
+
+  const onPhoneNoChange = (phoneNo) => {
+    phoneNo = phoneNo
+      .replace(/[^0-9]/, '')
+      .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+    form.setFieldsValue({ phoneNo });
+  };
+
+  const loginWithPhone = async () => {
+    const phoneId = form.getFieldValue('phoneId');
+    const { data } = await Client.get('/auth/login', { params: { phoneId } });
+    Toast.show({ icon: 'success', content: '로그인하였습니다.' });
+    localStorage.setItem('collector-session-id', data.sessionId);
+    history.push('/');
+  };
 
   return (
     <DepthPage>
@@ -56,15 +97,28 @@ export const AuthLogin = withRouter(({ history }) => {
             />
           </Tabs.TabPane>
           <Tabs.TabPane title="전화번호" key="phone">
-            <List.Item title="전화번호" extra={<a>문자 발송</a>}>
-              <Input placeholder="010-0000-0000" clearable />
-            </List.Item>
-            <List.Item title="인증번호">
-              <Input placeholder="000000" clearable />
-            </List.Item>
-            <Button color="primary" block={true}>
-              로그인
-            </Button>
+            <Form form={form} onFinish={loginWithPhone}>
+              <Form.Item name="phoneNo" extra={SendVerify}>
+                <Input
+                  placeholder="전화번호"
+                  onChange={onPhoneNoChange}
+                  clearable
+                />
+              </Form.Item>
+              <Form.Item name="code">
+                <Input
+                  type="text"
+                  pattern="[0-9]*"
+                  placeholder="인증번호"
+                  onChange={onVerifyPhone}
+                  clearable
+                />
+              </Form.Item>
+              <Form.Item name="phoneId" />
+              <Button color="primary" type="submit" block={true}>
+                로그인
+              </Button>
+            </Form>
           </Tabs.TabPane>
         </Tabs>
       </div>
