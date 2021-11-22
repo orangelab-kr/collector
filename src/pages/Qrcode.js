@@ -11,13 +11,7 @@ export const Qrcode = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [kickboardCode, setKickboardCode] = useState();
 
-  const onError = () => {
-    Toast.show({
-      icon: 'fail',
-      content: '카메라를 실행할 수 없습니다.',
-    });
-  };
-
+  const onError = () => Toast.show({ content: '카메라를 실행할 수 없습니다.' });
   const getKickboardCode = async (url) => {
     const { data } = await Client.get(`/kickboards/parse`, { params: { url } });
     setKickboardCode(data.kickboardCode);
@@ -30,7 +24,7 @@ export const Qrcode = () => {
 
   const onScan = async (value) => {
     if (isProcessing || !value) return;
-    window.navigator.vibrate(100);
+    if (window.navigator.vibrate) window.navigator.vibrate(100);
     setIsProcessing(true);
     const kickboardCode = await getKickboardCode(value);
     if (mode === 'battery') {
@@ -65,7 +59,7 @@ export const Qrcode = () => {
 
   const onClick = async () => {
     if (mode !== 'battery' || isProcessing || !kickboardCode) return;
-    window.navigator.vibrate(100);
+    if (window.navigator.vibrate) window.navigator.vibrate(100);
     setIsProcessing(true);
     await actionKickboard(kickboardCode, '/battery/lock');
     setIsProcessing(false);
@@ -105,6 +99,7 @@ export const Qrcode = () => {
         />
         {mode === 'battery' && (
           <Button
+            size="large"
             onClick={onClick}
             color="primary"
             block={true}
@@ -112,11 +107,13 @@ export const Qrcode = () => {
             loading={isProcessing && kickboardCode}
             style={{
               position: 'fixed',
+              margin: '0 auto',
               bottom: 15,
-              left: 30,
-              right: 30,
-              width: '85%',
-              height: 40,
+              left: 0,
+              right: 0,
+              width: '90%',
+              height: 50,
+              borderRadius: 15,
             }}
           >
             {isProcessing && kickboardCode

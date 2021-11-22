@@ -70,7 +70,7 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
     (path, refresh = false) =>
     async () => {
       try {
-        window.navigator.vibrate(100);
+        if (window.navigator.vibrate) window.navigator.vibrate(100);
         setLoading((loading) => ({ ...loading, [path]: true }));
         await Client.get(`/kickboards/${kickboard.kickboardCode}${path}`);
         if (refresh) await refreshKickboards();
