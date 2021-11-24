@@ -1,4 +1,4 @@
-import { Button, Checkbox, Dialog, Form, Space } from 'antd-mobile';
+import { Button, Checkbox, Dialog, Form, Slider, Space } from 'antd-mobile';
 import { SetOutline } from 'antd-mobile-icons';
 
 export const MapSetting = ({ setting, setSetting }) => {
@@ -17,6 +17,28 @@ export const MapSetting = ({ setting, setSetting }) => {
               <Checkbox value={3}>어린이보호구역</Checkbox>
             </Space>
           </Checkbox.Group>
+        </Form.Item>
+        <Form.Item label="배터리 필터링" name="batteryRange">
+          <Slider
+            range
+            ticks
+            min={0}
+            max={100}
+            step={10}
+            marks={{
+              0: 0,
+              10: 10,
+              20: 20,
+              30: 30,
+              40: 40,
+              50: 50,
+              60: 60,
+              70: 70,
+              80: 80,
+              90: 90,
+              100: 100,
+            }}
+          />
         </Form.Item>
       </Form>
     );

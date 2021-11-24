@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { NaverMap, RenderAfterNavermapsLoaded } from 'react-naver-maps';
 import 'react-spring-bottom-sheet/dist/style.css';
 import { StringParam, useQueryParam } from 'use-query-params';
@@ -11,12 +10,11 @@ import {
   MapRegion,
   Sidebar,
   SidebarOpener,
-  useDebounce,
   useLocalStorage,
 } from '..';
 
 export const Kickboards = () => {
-  const radius = 3000;
+  const radius = 400000;
   const defaultLoc = { lat: 37.50526, lng: 127.054806 };
   const defaultSetting = { priority: [0, 1, 2, 3] };
 
@@ -29,7 +27,6 @@ export const Kickboards = () => {
   const [kickboardCode] = useQueryParam('kickboardCode', StringParam);
   const [currentLoc, setCurrentLoc] = useState(defaultLoc);
   const [positionLoc, setPositionLoc] = useState(defaultLoc);
-  const debouncedPositionLoc = useDebounce(positionLoc, 500);
   const [setting, setSetting] = useLocalStorage(
     'collector-setting',
     defaultSetting
@@ -45,6 +42,22 @@ export const Kickboards = () => {
     setPositionLoc({ lat, lng });
     setKickboard(kickboard);
   };
+
+  const filteredKickboards = useMemo(
+    () =>
+      kickboards.filter((kickboard) => {
+        if (
+          !setting.batteryRange ||
+          kickboard.status.power.scooter.battery < setting.batteryRange[0] ||
+          kickboard.status.power.scooter.battery > setting.batteryRange[1]
+        ) {
+          return false;
+        }
+
+        return true;
+      }),
+    [kickboards, setting.batteryRange]
+  );
 
   const mergeKickboards = useCallback(
     (newKickboards) => {
@@ -72,17 +85,16 @@ export const Kickboards = () => {
   );
 
   const getKickboards = useCallback(() => {
-    if (zoom < 14) return;
+    const location = { lat: 36, lng: 128 };
     Client.get('/kickboards', {
-      params: { ...debouncedPositionLoc, radius },
+      params: { ...location, radius },
     }).then((res) => mergeKickboards(res.data.kickboards));
-  }, [debouncedPositionLoc, mergeKickboards]);
+  }, [mergeKickboards]);
 
   const getRegions = useCallback(async () => {
-    const priority = _.get(setting, 'priority');
-    const { data } = await Client.get('/regions', { params: { priority } });
+    const { data } = await Client.get('/regions');
     setRegions(data.regions);
-  }, [setting]);
+  }, []);
 
   const getCenter = () => {
     switch (mode) {
@@ -140,7 +152,7 @@ export const Kickboards = () => {
             setCurrentLoc={setCurrentLoc}
           />
 
-          {kickboards.map((kickboard) => (
+          {filteredKickboards.map((kickboard) => (
             <MapKickboard
               key={kickboard._id}
               kickboard={kickboard}
@@ -149,7 +161,11 @@ export const Kickboards = () => {
           ))}
 
           {regions.map((region) => (
-            <MapRegion key={region.regionId} region={region} />
+            <MapRegion
+              key={region.regionId}
+              region={region}
+              priority={setting.priority}
+            />
           ))}
         </NaverMap>
       </RenderAfterNavermapsLoaded>
