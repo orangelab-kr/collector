@@ -1,13 +1,15 @@
-import { Button, Loading } from 'antd-mobile';
+import { Button, Dialog, Loading } from 'antd-mobile';
 import {
   ArrowDownCircleOutline,
   BellMuteOutline,
   BellOutline,
+  CloseOutline,
   EyeInvisibleOutline,
   EyeOutline,
   LockOutline,
   MailOpenOutline,
   MailOutline,
+  UndoOutline,
   UnlockOutline,
   UploadOutline,
 } from 'antd-mobile-icons';
@@ -67,9 +69,19 @@ const ControlButton = ({
 export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
   const [loading, setLoading] = useState({});
   const onClick =
-    (path, refresh = false) =>
+    (path, refresh = false, confirm = false) =>
     async () => {
       try {
+        if (confirm) {
+          const confirmDialog = await Dialog.confirm({
+            content: '정말로 진행하시겠습니까?',
+            confirmText: '네',
+            cancelText: '아니요',
+          });
+
+          if (!confirmDialog) return;
+        }
+
         if (window.navigator.vibrate) window.navigator.vibrate(100);
         setLoading((loading) => ({ ...loading, [path]: true }));
         await Client.get(`/kickboards/${kickboard.kickboardCode}${path}`);
@@ -84,14 +96,14 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
       <ControlContainer>
         <ControlButton
           loading={loading['/start']}
-          onClick={onClick('/start')}
+          onClick={onClick('/start', false)}
           icon={<UnlockOutline />}
         >
           시작
         </ControlButton>
         <ControlButton
           loading={loading['/stop']}
-          onClick={onClick('/stop')}
+          onClick={onClick('/stop', false)}
           icon={<LockOutline />}
         >
           종료
@@ -165,6 +177,19 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
           small
         >
           소리 끄기
+        </ControlButton>
+      </ControlContainer>
+      <ControlContainer>
+        <ControlButton
+          loading={loading['/reboot']}
+          onClick={onClick('/reboot', false, true)}
+          icon={<UndoOutline />}
+          small
+        >
+          재부팅
+        </ControlButton>
+        <ControlButton icon={<CloseOutline />} small>
+          기능 없음
         </ControlButton>
       </ControlContainer>
     </MainContainer>
