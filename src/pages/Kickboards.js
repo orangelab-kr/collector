@@ -65,21 +65,26 @@ export const Kickboards = () => {
     (newKickboards) =>
       setKickboards((kickboards) => {
         const updatedKickboards = [...kickboards];
-        newKickboards.forEach((kickboard) => {
+        newKickboards.forEach((newKickboard) => {
           if (
-            !kickboard.status ||
-            !kickboard.status.power ||
-            !kickboard.status.gps
+            !newKickboard.status ||
+            !newKickboard.status.power ||
+            !newKickboard.status.gps
           ) {
             return;
           }
 
           const index = updatedKickboards.findIndex(
-            (k) => k.kickboardId === kickboard.kickboardId
+            (k) => k.kickboardId === newKickboard.kickboardId
           );
 
           if (index !== -1) updatedKickboards.splice(index, 1);
-          return updatedKickboards.push(kickboard);
+          updatedKickboards.push(newKickboard);
+
+          setKickboard((k) => {
+            if (!k || k.kickboardId !== newKickboard.kickboardId) return k;
+            return newKickboard;
+          });
         });
 
         return updatedKickboards;

@@ -1,4 +1,4 @@
-import { Button, Dialog, Loading } from 'antd-mobile';
+import { Button, Dialog, Loading, Switch } from 'antd-mobile';
 import {
   ArrowDownCircleOutline,
   BellMuteOutline,
@@ -111,6 +111,17 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
     }
   };
 
+  const onBrokenChange = async (checked) => {
+    try {
+      const mode = checked ? 2 : 0;
+      setLoading((loading) => ({ ...loading, '/broken': true }));
+      await Client.post(`/kickboards/${kickboard.kickboardCode}`, { mode });
+      await refreshKickboards();
+    } finally {
+      setLoading((loading) => ({ ...loading, '/broken': false }));
+    }
+  };
+
   return (
     <MainContainer>
       <ControlContainer>
@@ -215,6 +226,16 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
         >
           소리 끄기
         </ControlButton>
+      </ControlContainer>
+      <ControlContainer>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Switch
+            checked={kickboard && kickboard.mode === 2}
+            onChange={onBrokenChange}
+            loading={loading['/broken']}
+          />
+          <p style={{ marginLeft: 10 }}>고장 처리</p>
+        </div>
       </ControlContainer>
     </MainContainer>
   );
