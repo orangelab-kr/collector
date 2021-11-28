@@ -39,6 +39,8 @@ export const Kickboards = () => {
 
   const onSelectedKickboard = (kickboard) => {
     const { latitude: lat, longitude: lng } = kickboard.status.gps;
+
+    setMode('static');
     setPositionLoc({ lat, lng });
     setKickboard(kickboard);
   };
@@ -60,28 +62,29 @@ export const Kickboards = () => {
   );
 
   const mergeKickboards = useCallback(
-    (newKickboards) => {
-      const updatedKickboards = kickboards;
-      newKickboards.forEach((kickboard) => {
-        if (
-          !kickboard.status ||
-          !kickboard.status.power ||
-          !kickboard.status.gps
-        ) {
-          return;
-        }
+    (newKickboards) =>
+      setKickboards((kickboards) => {
+        const updatedKickboards = [...kickboards];
+        newKickboards.forEach((kickboard) => {
+          if (
+            !kickboard.status ||
+            !kickboard.status.power ||
+            !kickboard.status.gps
+          ) {
+            return;
+          }
 
-        const index = updatedKickboards.findIndex(
-          (k) => k.kickboardId === kickboard.kickboardId
-        );
+          const index = updatedKickboards.findIndex(
+            (k) => k.kickboardId === kickboard.kickboardId
+          );
 
-        if (index !== -1) updatedKickboards.splice(index, 1);
-        return updatedKickboards.push(kickboard);
-      });
+          if (index !== -1) updatedKickboards.splice(index, 1);
+          return updatedKickboards.push(kickboard);
+        });
 
-      setKickboards(updatedKickboards);
-    },
-    [kickboards]
+        return updatedKickboards;
+      }),
+    []
   );
 
   const getKickboards = useCallback(() => {

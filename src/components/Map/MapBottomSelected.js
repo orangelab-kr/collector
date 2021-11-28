@@ -3,7 +3,7 @@ import {
   ArrowDownCircleOutline,
   BellMuteOutline,
   BellOutline,
-  CloseOutline,
+  ExclamationOutline,
   EyeInvisibleOutline,
   EyeOutline,
   LockOutline,
@@ -68,6 +68,7 @@ const ControlButton = ({
 
 export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
   const [loading, setLoading] = useState({});
+  const [alarm, setAlarm] = useState(false);
   const onClick =
     (path, refresh = false, confirm = false) =>
     async () => {
@@ -91,8 +92,44 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
       }
     };
 
+  const onAlarmClick = async () => {
+    try {
+      if (window.navigator.vibrate) window.navigator.vibrate(100);
+      setLoading((loading) => ({ ...loading, '/alarm': true }));
+
+      if (alarm) {
+        await Client.get(`/kickboards/${kickboard.kickboardCode}/alarm/off`);
+        await Client.get(`/kickboards/${kickboard.kickboardCode}/stop`);
+        setAlarm(false);
+      } else {
+        await Client.get(`/kickboards/${kickboard.kickboardCode}/start`);
+        await Client.get(`/kickboards/${kickboard.kickboardCode}/alarm/on`);
+        setAlarm(true);
+      }
+    } finally {
+      setLoading((loading) => ({ ...loading, '/alarm': false }));
+    }
+  };
+
   return (
     <MainContainer>
+      <ControlContainer>
+        <ControlButton
+          loading={loading['/reboot']}
+          onClick={onClick('/reboot', false, true)}
+          icon={<UndoOutline />}
+          small
+        >
+          재부팅
+        </ControlButton>
+        <ControlButton
+          icon={<ExclamationOutline />}
+          onClick={onAlarmClick}
+          small
+        >
+          {loading['/alarm'] ? '멈춤' : '찾기'}
+        </ControlButton>
+      </ControlContainer>
       <ControlContainer>
         <ControlButton
           loading={loading['/start']}
@@ -177,19 +214,6 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
           small
         >
           소리 끄기
-        </ControlButton>
-      </ControlContainer>
-      <ControlContainer>
-        <ControlButton
-          loading={loading['/reboot']}
-          onClick={onClick('/reboot', false, true)}
-          icon={<UndoOutline />}
-          small
-        >
-          재부팅
-        </ControlButton>
-        <ControlButton icon={<CloseOutline />} small>
-          기능 없음
         </ControlButton>
       </ControlContainer>
     </MainContainer>
