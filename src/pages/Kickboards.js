@@ -14,9 +14,8 @@ import {
 } from '..';
 
 export const Kickboards = () => {
-  const radius = 400000;
   const defaultLoc = { lat: 37.50526, lng: 127.054806 };
-  const defaultSetting = { priority: [0, 1, 2, 3] };
+  const defaultSetting = { priority: [0, 1, 2, 3], batteryRange: [0, 100] };
 
   const [user, setUser] = useState();
   const [zoom, setZoom] = useState(16);
@@ -93,11 +92,16 @@ export const Kickboards = () => {
     []
   );
 
-  const getKickboards = useCallback(() => {
-    const location = { lat: 36, lng: 128 };
-    Client.get('/kickboards', {
-      params: { ...location, radius },
-    }).then((res) => mergeKickboards(res.data.kickboards));
+  const getKickboards = useCallback(async () => {
+    const take = 100;
+    let skip = 0;
+    while (true) {
+      const params = { take, skip, status: true };
+      const { data } = await Client.get('/kickboards', { params });
+      if (data.kickboards.length <= 0) break;
+      mergeKickboards(data.kickboards);
+      skip += take;
+    }
   }, [mergeKickboards]);
 
   const getUser = useCallback(
