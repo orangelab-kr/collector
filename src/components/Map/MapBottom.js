@@ -53,7 +53,11 @@ export const MapBottom = ({
           <Title>
             {!kickboard
               ? '킥보드를 선택하세요.'
-              : `${kickboard.kickboardCode} 선택됨 (🛴 ${kickboard.status.power.scooter.battery}%,  📟 ${kickboard.status.power.iot.battery}%)`}
+              : `${kickboard.mode === 2 ? '💔' : ''} ${
+                  kickboard.kickboardCode
+                } 선택됨 (🛴 ${kickboard.status.power.scooter.battery}%,  📟 ${
+                  kickboard.status.power.iot.battery
+                }%)`}
           </Title>
         </Header>
       }
