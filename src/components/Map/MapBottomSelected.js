@@ -126,23 +126,6 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
     <MainContainer>
       <ControlContainer>
         <ControlButton
-          loading={loading['/reboot']}
-          onClick={onClick('/reboot', false, true)}
-          icon={<UndoOutline />}
-          small
-        >
-          재부팅
-        </ControlButton>
-        <ControlButton
-          icon={<ExclamationOutline />}
-          onClick={onAlarmClick}
-          small
-        >
-          {loading['/alarm'] ? '멈춤' : '찾기'}
-        </ControlButton>
-      </ControlContainer>
-      <ControlContainer>
-        <ControlButton
           loading={loading['/start']}
           onClick={onClick('/start', false)}
           icon={<UnlockOutline />}
@@ -225,6 +208,23 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
           small
         >
           소리 끄기
+        </ControlButton>
+      </ControlContainer>
+      <ControlContainer>
+        <ControlButton
+          loading={loading['/reboot']}
+          onClick={onClick('/reboot', false, true)}
+          icon={<UndoOutline />}
+          small
+        >
+          재부팅
+        </ControlButton>
+        <ControlButton
+          icon={<ExclamationOutline />}
+          onClick={onAlarmClick}
+          small
+        >
+          {loading['/alarm'] ? '멈춤' : '찾기'}
         </ControlButton>
       </ControlContainer>
       <ControlContainer>
