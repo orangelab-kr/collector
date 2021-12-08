@@ -3,11 +3,10 @@ import styled from 'styled-components';
 
 const Container = styled.p`
   padding: 8px;
-  position: fixed;
+  position: sticky;
   margin: 20px 0 0 20px;
-  top: 0;
+  top: calc(max(15px, env(safe-area-inset-top)) - 15px);
   left: 0;
-  z-index: 1;
   background-color: #fff;
   border-radius: 30%;
 `;
