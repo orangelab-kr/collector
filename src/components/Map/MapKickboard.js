@@ -10,9 +10,11 @@ export const MapKickboard = ({ kickboard, setSelectedKickboard }) => {
     EMPTY_BATTERY: url + '/empty_battery.png',
     LOW_BATTERY: url + '/low_battery.png',
     NORMAL: url + '/normal.png',
+    RIDING: url + '/riding.png',
   };
 
   const getIcon = () => {
+    if (kickboard.mode === 1) return TYPES.RIDING;
     if (kickboard.mode === 2) return TYPES.BROKEN;
     if (kickboard.mode === 3) return TYPES.COLLECTED;
     if (kickboard.collect) return TYPES.COLLECT_TARGET;
