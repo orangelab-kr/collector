@@ -18,6 +18,7 @@ export const Kickboards = () => {
   const defaultLoc = { lat: 37.50526, lng: 127.054806 };
   const defaultSetting = { priority: [0, 1, 2, 3] };
 
+  const [user, setUser] = useState();
   const [zoom, setZoom] = useState(16);
   const [mode, setMode] = useState('static');
   const [kickboard, setKickboard] = useState();
@@ -99,8 +100,13 @@ export const Kickboards = () => {
     }).then((res) => mergeKickboards(res.data.kickboards));
   }, [mergeKickboards]);
 
+  const getUser = useCallback(
+    () => Client.get('/auth').then((res) => setUser(res.data.user)),
+    []
+  );
+
   const getRegions = useCallback(async () => {
-    const { data } = await Client.get('/regions');
+    const { data } = await Client.get('/regions/all');
     setRegions(data.regions);
   }, []);
 
@@ -126,6 +132,7 @@ export const Kickboards = () => {
 
   useEffect(() => getKickboards(), [getKickboards]);
   useEffect(() => getRegions(), [getRegions]);
+  useEffect(() => getUser(), [getUser]);
   useEffect(
     () => selectKickboardByCode(kickboardCode),
     [kickboardCode, selectKickboardByCode]
@@ -134,7 +141,7 @@ export const Kickboards = () => {
   return (
     <>
       <SidebarOpener setSidebar={setSidebar} />
-      <Sidebar sidebar={sidebar} setSidebar={setSidebar} />
+      <Sidebar sidebar={sidebar} setSidebar={setSidebar} user={user} />
       <MapBottom
         kickboard={kickboard}
         mode={mode}

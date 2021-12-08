@@ -1,12 +1,16 @@
 import { Popup } from 'antd-mobile';
-import { RightOutline, SystemQRcodeOutline } from 'antd-mobile-icons';
+import {
+  LoopOutline,
+  RightOutline,
+  SystemQRcodeOutline,
+} from 'antd-mobile-icons';
 import { SidebarPrimaryButton, SidebarProfile } from '.';
 
 export * from './SidebarOpener';
 export * from './SidebarPrimary';
 export * from './SidebarProfile';
 
-export const Sidebar = ({ sidebar, setSidebar }) => (
+export const Sidebar = ({ sidebar, setSidebar, user }) => (
   <Popup
     visible={sidebar}
     onMaskClick={() => setSidebar(false)}
@@ -16,12 +20,13 @@ export const Sidebar = ({ sidebar, setSidebar }) => (
       padding: '50px 0 0 30px',
     }}
   >
-    <SidebarProfile user={{ realname: '엄다니엘' }} />
+    <SidebarProfile user={user} />
     <SidebarPrimaryButton
       name="QR코드"
       icon={<SystemQRcodeOutline />}
       href="/qrcode"
     />
+    <SidebarPrimaryButton name="IoT 교체" icon={<LoopOutline />} href="/iot" />
     <SidebarPrimaryButton
       name="로그아웃"
       icon={<RightOutline />}

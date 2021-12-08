@@ -7,5 +7,6 @@ const NameContainer = styled.p`
 `;
 
 export const SidebarProfile = ({ user }) => {
-  return <NameContainer>{user.realname}</NameContainer>;
+  return <NameContainer>{user && user.username}</NameContainer>;
 };
+ 
