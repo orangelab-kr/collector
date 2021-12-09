@@ -2,10 +2,11 @@ import { UnorderedListOutline } from 'antd-mobile-icons';
 import styled from 'styled-components';
 
 const Container = styled.p`
+  z-index: 1;
   padding: 8px;
-  position: sticky;
-  margin: 20px 0 0 20px;
-  top: calc(max(15px, env(safe-area-inset-top)) - 15px);
+  position: fixed;
+  margin: 20px 0 0 10px;
+  top: 0;
   left: 0;
   background-color: #fff;
   border-radius: 30%;
