@@ -52,7 +52,7 @@ export const MapLocationButton = (props) => {
         position: 'absolute',
         top: -60,
         right: 5,
-        borderRadius: 100,
+        borderRadius: '30%',
         padding: '12px 15px',
       }}
     >

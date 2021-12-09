@@ -65,7 +65,7 @@ export const MapSetting = ({ setting, setSetting }) => {
         position: 'absolute',
         top: -120,
         right: 5,
-        borderRadius: 100,
+        borderRadius: '30%',
         padding: '12px 15px',
       }}
     >
