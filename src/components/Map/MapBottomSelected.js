@@ -117,7 +117,7 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
   };
 
   useEffect(() => {
-    if (kickboard.kickboardCode === kickboardCode) return;
+    if (!kickboard || kickboard.kickboardCode === kickboardCode) return;
     setKickboardCode(kickboard.kickboardCode);
     setLoading({});
   }, [kickboard, kickboardCode]);

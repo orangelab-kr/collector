@@ -18,6 +18,17 @@ export const MapSetting = ({ setting, setSetting }) => {
             </Space>
           </Checkbox.Group>
         </Form.Item>
+        <Form.Item label="상태 필터" name="statusFilter">
+          <Checkbox.Group>
+            <Space direction="vertical">
+              <Checkbox value="normal">정상</Checkbox>
+              <Checkbox value="riding">이용 중</Checkbox>
+              <Checkbox value="broken">고장</Checkbox>
+              <Checkbox value="collect_target">수거 대상</Checkbox>
+              <Checkbox value="collected">미분출</Checkbox>
+            </Space>
+          </Checkbox.Group>
+        </Form.Item>
         <Form.Item label="배터리 필터링" name="batteryRange">
           <Slider
             range

@@ -15,7 +15,11 @@ import {
 
 export const Kickboards = () => {
   const defaultLoc = { lat: 37.50526, lng: 127.054806 };
-  const defaultSetting = { priority: [0, 1, 2, 3], batteryRange: [0, 100] };
+  const defaultSetting = {
+    priority: [0, 1, 2, 3],
+    batteryRange: [0, 100],
+    statusFilter: ['normal', 'riding', 'broken', 'collected', 'collect_target'],
+  };
 
   const [user, setUser] = useState();
   const [zoom, setZoom] = useState(16);
@@ -45,6 +49,14 @@ export const Kickboards = () => {
     setKickboard(kickboard);
   };
 
+  const getCurrentStatus = (kickboard) => {
+    if (kickboard.mode === 1) return 'riding';
+    if (kickboard.mode === 2) return 'broken';
+    if (kickboard.mode === 3) return 'collected';
+    if (kickboard.collect) return 'collect_target';
+    return 'normal';
+  };
+
   const filteredKickboards = useMemo(
     () =>
       kickboards.filter((kickboard) => {
@@ -56,9 +68,16 @@ export const Kickboards = () => {
           return false;
         }
 
+        if (
+          setting.statusFilter &&
+          !setting.statusFilter.includes(getCurrentStatus(kickboard))
+        ) {
+          return false;
+        }
+
         return true;
       }),
-    [kickboards, setting.batteryRange]
+    [kickboards, setting.batteryRange, setting.statusFilter]
   );
 
   const mergeKickboards = useCallback(
