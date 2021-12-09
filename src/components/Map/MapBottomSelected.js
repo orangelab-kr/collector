@@ -13,7 +13,7 @@ import {
   UnlockOutline,
   UploadOutline,
 } from 'antd-mobile-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Client } from '../..';
 
@@ -44,14 +44,7 @@ const ControlStyledButton = styled(Button)`
   }
 `;
 
-const ControlButton = ({
-  children,
-  loading,
-  icon,
-  small,
-  onClick,
-  refreshKickboard,
-}) => (
+const ControlButton = ({ children, loading, icon, small, onClick }) => (
   <ControlStyledButton size="large" small={small} onClick={onClick}>
     {loading ? <Loading color="default" /> : icon}
     {small ? ' ' : ''}
@@ -68,6 +61,7 @@ const ControlButton = ({
 
 export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
   const [loading, setLoading] = useState({});
+  const [kickboardCode, setKickboardCode] = useState();
   const [alarm, setAlarm] = useState(false);
   const onClick =
     (path, refresh = false, confirm = false) =>
@@ -121,6 +115,12 @@ export const MapBottomSelected = ({ kickboard, refreshKickboards }) => {
       setLoading((loading) => ({ ...loading, '/broken': false }));
     }
   };
+
+  useEffect(() => {
+    if (kickboard.kickboardCode === kickboardCode) return;
+    setKickboardCode(kickboard.kickboardCode);
+    setLoading({});
+  }, [kickboard, kickboardCode]);
 
   return (
     <MainContainer>
