@@ -48,7 +48,7 @@ export const MapKickboardInput = ({ selectKickboardByCode }) => {
       onClick={onClick}
       style={{
         position: 'absolute',
-        top: -60,
+        top: -120,
         left: 5,
         borderRadius: '30%',
         padding: '12px 15px',

@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import {
   MapBottomSelected,
   MapKickboardInput,
+  MapKickboardRefresh,
   MapLocationButton,
   MapSetting,
-} from '.';
+} from '..';
 
 const Header = styled.div`
   margin: 15px 0 10px 10px;
@@ -50,6 +51,7 @@ export const MapBottom = ({
           <MapSetting setting={setting} setSetting={setSetting} />
           <MapKickboardInput selectKickboardByCode={selectKickboardByCode} />
           <MapLocationButton mode={mode} onModeChange={setMode} />
+          <MapKickboardRefresh onRefresh={getKickboards} />
           <Title>
             {!kickboard
               ? '킥보드를 선택하세요.'
