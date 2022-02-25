@@ -1,6 +1,6 @@
 import { Button, Form, Input, Toast } from 'antd-mobile';
 import { SearchOutline } from 'antd-mobile-icons';
-import QrReader from 'react-qr-reader';
+import { QrReader } from 'react-qr-reader';
 
 export const IoTLookup = ({ onScan }) => {
   const onError = () => Toast.show({ content: '카메라를 실행할 수 없습니다.' });
@@ -15,15 +15,15 @@ export const IoTLookup = ({ onScan }) => {
       />
       <Form onFinish={({ kickboardCode }) => onScan(kickboardCode)}>
         <Form.Item
-          label="킥보드 코드"
-          name="kickboardCode"
+          label='킥보드 코드'
+          name='kickboardCode'
           extra={
-            <Button color="primary" style={{ marginTop: 8 }} type="submit">
+            <Button color='primary' style={{ marginTop: 8 }} type='submit'>
               <SearchOutline /> 입력
             </Button>
           }
         >
-          <Input placeholder="킥보드 코드를 입력하세요." />
+          <Input placeholder='킥보드 코드를 입력하세요.' />
         </Form.Item>
       </Form>
     </>

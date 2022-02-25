@@ -1,7 +1,7 @@
 import { Button, Form, Input, Tabs, Toast } from 'antd-mobile';
 import { RightOutline, SearchOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
-import QrReader from 'react-qr-reader';
+import { QrReader } from 'react-qr-reader';
 import { withRouter } from 'react-router';
 import 'react-spring-bottom-sheet/dist/style.css';
 import { Client, DepthPage, PageHeader } from '..';
@@ -92,12 +92,12 @@ export const Qrcode = withRouter(({ history }) => {
       <div style={{ marginLeft: 28, marginRight: 28, marginBottom: 50 }}>
         <PageHeader>QR코드</PageHeader>
         <Tabs activeKey={mode} onChange={setMode}>
-          <Tabs.TabPane title="조회" key="lookup" disabled={kickboardCode} />
-          <Tabs.TabPane title="수거" key="collect" disabled={kickboardCode} />
-          <Tabs.TabPane title="분출" key="eruption" disabled={kickboardCode} />
+          <Tabs.TabPane title='조회' key='lookup' disabled={kickboardCode} />
+          <Tabs.TabPane title='수거' key='collect' disabled={kickboardCode} />
+          <Tabs.TabPane title='분출' key='eruption' disabled={kickboardCode} />
           <Tabs.TabPane
-            title="배터리 교체"
-            key="battery"
+            title='배터리 교체'
+            key='battery'
             disabled={kickboardCode}
           />
         </Tabs>
@@ -109,22 +109,22 @@ export const Qrcode = withRouter(({ history }) => {
         />
         <Form onFinish={({ kickboardCode }) => onScan(kickboardCode)}>
           <Form.Item
-            label="킥보드 코드"
-            name="kickboardCode"
+            label='킥보드 코드'
+            name='kickboardCode'
             extra={
-              <Button color="primary" style={{ marginTop: 8 }} type="submit">
+              <Button color='primary' style={{ marginTop: 8 }} type='submit'>
                 <SearchOutline /> 입력
               </Button>
             }
           >
-            <Input placeholder="킥보드 코드를 입력하세요." />
+            <Input placeholder='킥보드 코드를 입력하세요.' />
           </Form.Item>
         </Form>
         {mode === 'battery' && (
           <Button
-            size="large"
+            size='large'
             onClick={onClick}
-            color="primary"
+            color='primary'
             block={true}
             icon={<RightOutline />}
             loading={isProcessing && kickboardCode}

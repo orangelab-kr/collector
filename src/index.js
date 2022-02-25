@@ -38,20 +38,20 @@ ReactDOM.render(
       <BrowserRouter>
         <QueryParamProvider ReactRouterRoute={Route}>
           <Switch>
-            <Route path="/auth/login">
+            <Route path='/auth/login'>
               <AuthLogin />
             </Route>
             <RequiredAuth>
-              <Route path="/" exact>
+              <Route path='/' exact>
                 <Kickboards />
               </Route>
-              <Route path="/qrcode">
+              <Route path='/qrcode'>
                 <Qrcode />
               </Route>
-              <Route path="/iot">
+              <Route path='/iot'>
                 <IoT />
               </Route>
-              <Route path="/auth/logout">
+              <Route path='/auth/logout'>
                 <AuthLogout />
               </Route>
             </RequiredAuth>

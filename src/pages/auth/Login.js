@@ -1,7 +1,7 @@
 import { Button, Form, Input, Tabs, Toast } from 'antd-mobile';
 import { MessageOutline, RedoOutline } from 'antd-mobile-icons';
 import { useEffect, useState } from 'react';
-import QrReader from 'react-qr-reader';
+import { QrReader } from 'react-qr-reader';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import { Client, DepthPage, PageHeader, useQuery } from '../..';
@@ -41,9 +41,9 @@ export const AuthLogin = withRouter(({ history }) => {
 
   const onVerifyPhone = async () => {
     const phoneNo = form.getFieldValue('phoneNo');
-    const code = form.getFieldValue('code');
-    if (!phoneNo || code.length !== 6) return;
-    const { data } = await Client.post('/auth/phone', { phoneNo, code });
+    const verifyCode = form.getFieldValue('verifyCode');
+    if (!phoneNo || verifyCode.length !== 6) return;
+    const { data } = await Client.post('/auth/phone', { phoneNo, verifyCode });
 
     const { phoneId } = data;
     form.setFieldsValue({ phoneId });
@@ -59,7 +59,7 @@ export const AuthLogin = withRouter(({ history }) => {
   }, [history, preloginId]);
 
   const SendVerify = (
-    <Button size="mini" color="primary" onClick={sendVerify}>
+    <Button size='mini' color='primary' onClick={sendVerify}>
       {requested ? <RedoOutline /> : <MessageOutline />}{' '}
       {requested ? '재전송' : '문자 발송'}
     </Button>
@@ -85,7 +85,32 @@ export const AuthLogin = withRouter(({ history }) => {
       <div style={{ marginLeft: 28, marginRight: 28 }}>
         <PageHeader>로그인</PageHeader>
         <Tabs>
-          <Tabs.TabPane title="카메라" key="camera">
+          <Tabs.TabPane title='전화번호' key='phone'>
+            <Form form={form} onFinish={loginWithPhone}>
+              <Form.Item name='phoneNo' extra={SendVerify}>
+                <Input
+                  type='tel'
+                  placeholder='전화번호'
+                  onChange={onPhoneNoChange}
+                  clearable
+                />
+              </Form.Item>
+              <Form.Item name='verifyCode'>
+                <Input
+                  type='text'
+                  pattern='[0-9]*'
+                  placeholder='인증번호'
+                  onChange={onVerifyPhone}
+                  clearable
+                />
+              </Form.Item>
+              <Form.Item name='phoneId' />
+              <Button color='primary' type='submit' block={true}>
+                로그인
+              </Button>
+            </Form>
+          </Tabs.TabPane>
+          <Tabs.TabPane title='카메라' key='camera'>
             <MessageContainer>
               화면에 나와있는 QR 코드를 스캔하여 더욱 간편하게 로그인하세요.
             </MessageContainer>
@@ -95,31 +120,6 @@ export const AuthLogin = withRouter(({ history }) => {
               onScan={onScan}
               style={{ width: '100%' }}
             />
-          </Tabs.TabPane>
-          <Tabs.TabPane title="전화번호" key="phone">
-            <Form form={form} onFinish={loginWithPhone}>
-              <Form.Item name="phoneNo" extra={SendVerify}>
-                <Input
-                  type="tel"
-                  placeholder="전화번호"
-                  onChange={onPhoneNoChange}
-                  clearable
-                />
-              </Form.Item>
-              <Form.Item name="code">
-                <Input
-                  type="text"
-                  pattern="[0-9]*"
-                  placeholder="인증번호"
-                  onChange={onVerifyPhone}
-                  clearable
-                />
-              </Form.Item>
-              <Form.Item name="phoneId" />
-              <Button color="primary" type="submit" block={true}>
-                로그인
-              </Button>
-            </Form>
           </Tabs.TabPane>
         </Tabs>
       </div>
