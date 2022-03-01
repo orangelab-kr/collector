@@ -1,12 +1,12 @@
 {
-  "name": "colector",
-  "version": "1.2.3",
+  "name": "collector",
+  "version": "1.2.4",
   "private": true,
   "dependencies": {
-    "antd-mobile": "^5.2.0",
+    "antd-mobile": "^5.2.2",
     "antd-mobile-icons": "^0.2.2",
     "axios": "^0.26.0",
-    "dayjs": "^1.10.7",
+    "dayjs": "^1.10.8",
     "query-string": "^7.1.1",
     "react": "^17.0.2",
     "react-app-polyfill": "^3.0.0",

@@ -103,8 +103,9 @@ export const Qrcode = withRouter(({ history }) => {
         </Tabs>
         <QrReader
           delay={300}
-          onError={onError}
           onScan={onScan}
+          onError={onError}
+          constraints={{ facingMode: 'environment' }}
           style={{ width: '100%', marginTop: 20 }}
         />
         <Form onFinish={({ kickboardCode }) => onScan(kickboardCode)}>

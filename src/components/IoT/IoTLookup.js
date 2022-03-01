@@ -11,6 +11,7 @@ export const IoTLookup = ({ onScan }) => {
         delay={300}
         onError={onError}
         onScan={onScan}
+        constraints={{ facingMode: 'environment' }}
         style={{ width: '100%', marginTop: 20 }}
       />
       <Form onFinish={({ kickboardCode }) => onScan(kickboardCode)}>

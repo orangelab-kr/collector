@@ -118,6 +118,7 @@ export const AuthLogin = withRouter(({ history }) => {
               delay={300}
               onError={onError}
               onScan={onScan}
+              constraints={{ facingMode: 'environment' }}
               style={{ width: '100%' }}
             />
           </Tabs.TabPane>
