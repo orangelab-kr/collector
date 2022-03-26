@@ -1,7 +1,7 @@
-import { Button, Form, Input, Tabs, Toast } from 'antd-mobile';
+import { Button, Form, Input, Switch, Tabs, Toast } from 'antd-mobile';
 import { RightOutline, SearchOutline } from 'antd-mobile-icons';
 import { useState } from 'react';
-import { QrReader } from 'react-qr-reader';
+import QrReader from 'react-qr-reader';
 import { withRouter } from 'react-router';
 import 'react-spring-bottom-sheet/dist/style.css';
 import { Client, DepthPage, PageHeader } from '..';
@@ -10,6 +10,7 @@ export const Qrcode = withRouter(({ history }) => {
   const [mode, setMode] = useState('lookup');
   const [isProcessing, setIsProcessing] = useState(false);
   const [kickboardCode, setKickboardCode] = useState();
+  const [broken, setBroken] = useState(true);
 
   const onError = () => Toast.show({ content: '카메라를 실행할 수 없습니다.' });
   const getKickboardCode = async (url) => {
@@ -23,14 +24,18 @@ export const Qrcode = withRouter(({ history }) => {
     return data.kickboardCode;
   };
 
-  const actionKickboard = async (kickboardCode, action) => {
-    await Client.get(`/kickboards/${kickboardCode}${action}`);
+  const actionKickboard = async (kickboardCode, action, body) => {
+    await Client[body ? 'post' : 'get'](
+      `/kickboards/${kickboardCode}${action}`,
+      body
+    );
   };
 
   const onScan = async (value) => {
     if (isProcessing || !value) return;
     if (window.navigator.vibrate) window.navigator.vibrate(100);
     setIsProcessing(true);
+    Toast.show({ content: '처리 중입니다.', position: 'bottom' });
     const kickboardCode = await getKickboardCode(value);
     if (mode === 'lookup') {
       history.push({
@@ -72,6 +77,19 @@ export const Qrcode = withRouter(({ history }) => {
         position: 'bottom',
       });
     }
+
+    if (mode === 'broken') {
+      const mode = broken ? 2 : 0;
+      await actionKickboard(kickboardCode, '/', { mode });
+      setIsProcessing(false);
+      setKickboardCode(null);
+      return Toast.show({
+        content: broken
+          ? '고장 처리되었습니다.'
+          : '고장 처리가 해제되었습니다.',
+        position: 'bottom',
+      });
+    }
   };
 
   const onClick = async () => {
@@ -100,7 +118,13 @@ export const Qrcode = withRouter(({ history }) => {
             key='battery'
             disabled={kickboardCode}
           />
+          <Tabs.TabPane
+            title='문막모드'
+            key='broken'
+            disabled={kickboardCode}
+          />
         </Tabs>
+
         <QrReader
           delay={300}
           onScan={onScan}
@@ -108,6 +132,15 @@ export const Qrcode = withRouter(({ history }) => {
           constraints={{ facingMode: 'environment' }}
           style={{ width: '100%', marginTop: 20 }}
         />
+        {mode === 'broken' && (
+          <Switch
+            checked={broken}
+            onChange={setBroken}
+            checkedText='고장 처리'
+            uncheckedText='고장 해제'
+            style={{ margin: 10 }}
+          />
+        )}
         <Form onFinish={({ kickboardCode }) => onScan(kickboardCode)}>
           <Form.Item
             label='킥보드 코드'

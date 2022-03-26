@@ -1,6 +1,6 @@
 import { Button, Form, Input, Toast } from 'antd-mobile';
 import { SearchOutline } from 'antd-mobile-icons';
-import { QrReader } from 'react-qr-reader';
+import QrReader from 'react-qr-reader';
 
 export const IoTLookup = ({ onScan }) => {
   const onError = () => Toast.show({ content: '카메라를 실행할 수 없습니다.' });

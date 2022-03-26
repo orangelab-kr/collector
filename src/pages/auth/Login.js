@@ -1,7 +1,7 @@
 import { Button, Form, Input, Tabs, Toast } from 'antd-mobile';
 import { MessageOutline, RedoOutline } from 'antd-mobile-icons';
 import { useEffect, useState } from 'react';
-import { QrReader } from 'react-qr-reader';
+import QrReader from 'react-qr-reader';
 import { withRouter } from 'react-router';
 import styled from 'styled-components';
 import { Client, DepthPage, PageHeader, useQuery } from '../..';
