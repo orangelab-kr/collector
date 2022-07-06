@@ -7,12 +7,12 @@ import styled from 'styled-components';
 import { Reset } from 'styled-reset';
 import { QueryParamProvider } from 'use-query-params';
 import {
-  AuthLogout,
   AuthLogin,
+  AuthLogout,
+  IoT,
   Kickboards,
   Qrcode,
   RequiredAuth,
-  IoT,
 } from '.';
 
 export * from './components';

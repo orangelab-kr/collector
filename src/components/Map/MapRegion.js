@@ -1,7 +1,6 @@
 import { Polygon } from 'react-naver-maps';
 
-export const MapRegion = ({ region, priority }) => {
-  const { geofences } = region;
+export const MapRegion = ({ geofences, priority }) => {
   const getOpacity = (geofence) =>
     parseInt(geofence.profile.color.substr(7, 2) || '1a', 16) / 255;
 

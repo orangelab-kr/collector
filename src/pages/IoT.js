@@ -27,7 +27,6 @@ export const IoT = withRouter(({ history }) => {
   const getKickboard = async (kickboardCode) => {
     const { data } = await Client.get(`/kickboards/${kickboardCode}`);
     setKickboard(data.kickboard);
-    console.log(data.kickboard);
     return data.kickboard;
   };
 
@@ -86,7 +85,7 @@ export const IoT = withRouter(({ history }) => {
             initialValues={kickboard}
             style={{ marginTop: 20, border: 'none' }}
           >
-            <Form.Item name="franchiseId" noStyle>
+            <Form.Item name='franchiseId' noStyle>
               {step === 1 && (
                 <IoTSelect>
                   {franchises.map((franchise) => (
@@ -101,7 +100,7 @@ export const IoT = withRouter(({ history }) => {
               )}
             </Form.Item>
 
-            <Form.Item name="regionId" noStyle>
+            <Form.Item name='regionId' noStyle>
               {step === 2 && (
                 <IoTSelect>
                   {regions.map((region) => (
@@ -117,9 +116,9 @@ export const IoT = withRouter(({ history }) => {
             </Form.Item>
 
             <Button
-              size="large"
+              size='large'
               onClick={onClick}
-              color="primary"
+              color='primary'
               block={true}
               loading={isProcessing}
               style={{

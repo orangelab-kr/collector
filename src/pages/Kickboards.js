@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { NaverMap, RenderAfterNavermapsLoaded } from 'react-naver-maps';
 import 'react-spring-bottom-sheet/dist/style.css';
@@ -26,7 +27,7 @@ export const Kickboards = () => {
   const [mode, setMode] = useState('static');
   const [kickboard, setKickboard] = useState();
   const [kickboards, setKickboards] = useState([]);
-  const [regions, setRegions] = useState([]);
+  const [geofences, setGeofences] = useState([]);
   const [sidebar, setSidebar] = useState(false);
   const [kickboardCode] = useQueryParam('kickboardCode', StringParam);
   const [currentLoc, setCurrentLoc] = useState(defaultLoc);
@@ -129,8 +130,14 @@ export const Kickboards = () => {
   );
 
   const getRegions = useCallback(async () => {
-    const { data } = await Client.get('/regions/all');
-    setRegions(data.regions);
+    const geofences = [];
+    const { data } = await Client.get('/regions');
+    for (const region of data.regions) {
+      const { data } = await axios.get(region.cacheUrl);
+      geofences.push(...data);
+    }
+
+    setGeofences(geofences);
   }, []);
 
   const getCenter = () => {
@@ -174,7 +181,7 @@ export const Kickboards = () => {
         setting={setting}
         setSetting={setSetting}
       />
-      <RenderAfterNavermapsLoaded ncpClientId="0bl6xi2j7x">
+      <RenderAfterNavermapsLoaded ncpClientId='0bl6xi2j7x'>
         <NaverMap
           onClick={onClick}
           onCenterChanged={onCenterChanged}
@@ -198,13 +205,7 @@ export const Kickboards = () => {
             />
           ))}
 
-          {regions.map((region) => (
-            <MapRegion
-              key={region.regionId}
-              region={region}
-              priority={setting.priority}
-            />
-          ))}
+          <MapRegion geofences={geofences} priority={setting.priority} />
         </NaverMap>
       </RenderAfterNavermapsLoaded>
     </>
